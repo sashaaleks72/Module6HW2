@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+    ms-sql-server:
+        image: mcr.microsoft.com/mssql/server
+        environment:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "QwErTy_12345"
+        ports:
+            - "1433:1433"
+    web-api:
+        build:
+            context: ./backend
+        ports:
+            - "44374:8080"
+        environment:
+            DBServer: "ms-sql-server"
+            DBPort: "1433"
+            DBPassword: "QwErTy_12345"
+            DBUser: "SA"
+            DBName: "Teapot"
+    client:
+        image: fronend:v1
+        build:
+            context: ./frontend
+        ports:
+            - "3000:3000"

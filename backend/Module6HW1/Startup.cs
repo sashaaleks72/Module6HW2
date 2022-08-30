@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,12 @@ namespace Module6HW1
 
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
+            var server = Configuration["DBServer"] ?? "ms-sql-server";
+            var port = Configuration["DBPort"] ?? "1433";
+            var user = Configuration["DBUser"] ?? "SA";
+            var pass = Configuration["DBPassword"] ?? "QwErTy_12345";
+            var database = Configuration["DBName"] ?? "Teapot";
+            string connectionString = $"Server={server},{port};Initial Catalog={database};User ID={user};Password={pass}";
 
             services.AddCors(options =>
             {
@@ -39,7 +45,7 @@ namespace Module6HW1
                                   });
             });
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connection));
+                options.UseSqlServer(connectionString));
             services.AddControllers();
             services.AddTransient<IDataProvider, DataProvider>();
             services.AddTransient<ITeapotService, TeapotService>();
