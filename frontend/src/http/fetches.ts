@@ -1,6 +1,6 @@
 import ProductDto from "../dtos/ProductDto";
 
-const apiUrl = "https://localhost:44374/api";
+const apiUrl = "http://localhost:44374/api";
 
 export const getProducts = async (): Promise<ProductDto[]> => {
     const result: Response = await fetch(`${apiUrl}/teapots`);
